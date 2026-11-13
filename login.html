@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to Your Account - SmartFit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .login-container {
+            background: #ffffff;
+            padding: 40px 35px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(107, 33, 168, 0.1);
+            width: 100%;
+            max-width: 420px;
+        }
+        .logo-area {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo-area h1 {
+            color: #581c87;
+            font-size: 24px;
+        }
+        .logo-area p {
+            color: #6b7280;
+            font-size: 13px;
+        }
+        .login-container h2 {
+            text-align: center;
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        .input-group {
+            margin-bottom: 18px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #374151;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #d8b4fe;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus {
+            border-color: #7e22ce;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 13px;
+            background-color: #7e22ce;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .btn-login:hover {
+            background-color: #6b21a8;
+        }
+        .extra-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 13px;
+        }
+        .extra-links a {
+            color: #7e22ce;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .extra-links a:hover {
+            text-decoration: underline;
+        }
+        .register-prompt {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 13px;
+            color: #4b5563;
+        }
+        .register-prompt a {
+            color: #7e22ce;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .register-prompt a:hover {
+            text-decoration: underline;
+        }
+        /* Toast Notification Styling */
+        #toast {
+            visibility: hidden;
+            min-width: 280px;
+            background-color: #7e22ce;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 14px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        #toast.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="logo-area">
+            <h1>Smart Fit</h1>
+            <p>Your Size. Our Priority.</p>
+        </div>
+        <h2>Login to Your Account</h2>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+
+       <div class="extra-links">
+    <a href="forgot-password.html">Forgot Password?</a>
+</div>
+
+        <div class="register-prompt">
+            Don't have an account? <a href="register.html">Register</a>
+        </div>
+    </div>
+
+    <div id="toast">Login Successful!</div>
+
+    <script>
+        function showToast(message, isError = false) {
+            const toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.style.backgroundColor = isError ? "#dc2626" : "#7e22ce";
+            toast.className = "show";
+            setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast("✨ Login Successful! Welcome back, " + data.username);
+                    // සාර්ථක වූ පසු Dashboard එකට හෝ Home පිටුවට යාමට (දැනට index.html වෙත)
+                    setTimeout(() => {
+                        window.location.href = "index.html"; 
+                    }, 1500);
+                } else {
+                    showToast("❌ Error: " + (data.detail || "Invalid email or password"), true);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                showToast("⚠️ Network error occurred!", true);
+            }
+        });
+
+        // Forgot Password Modal Functions
+        function openForgotPasswordModal(e) {
+            e.preventDefault();
+            document.getElementById('forgotModal').style.display = 'flex';
+        }
+
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotModal').style.display = 'none';
+            document.getElementById('resetEmail').value = '';
+            document.getElementById('resetPassword').value = '';
+        }
+
+        async function submitResetPassword() {
+            const email = document.getElementById('resetEmail').value.trim();
+            const new_password = document.getElementById('resetPassword').value;
+
+            if (!email || !new_password) {
+                showToast("❌ Please fill in all fields", true);
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, new_password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast("✨ Password updated successfully!");
+                    closeForgotPasswordModal();
+                } else {
+                    showToast("❌ " + (data.detail || "Failed to update password"), true);
+                }
+            } catch (error) {
+                showToast("⚠️ Network error occurred!", true);
+            }
+        }
+
+    </script>
+</body>
+</html>

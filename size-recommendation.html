@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Size Recommendation - SmartFit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f9f5ff;
+            color: #1f2937;
+        }
+        header {
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #581c87;
+        }
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .nav-links a:hover {
+            color: #7e22ce;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 35px;
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 4px 20px rgba(126, 34, 206, 0.06);
+            border: 1.5px solid #f3e8ff;
+        }
+        h1 {
+            color: #581c87;
+            font-size: 24px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        p.subtitle {
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 6px;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #fff;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #7e22ce;
+        }
+        .btn-submit {
+            width: 100%;
+            background: #7e22ce;
+            color: white;
+            border: none;
+            padding: 13px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+        .btn-submit:hover {
+            background: #6b21a8;
+            transform: scale(1.01);
+        }
+        .result-box {
+            margin-top: 25px;
+            padding: 22px;
+            background: #f3e8ff;
+            border-radius: 12px;
+            text-align: center;
+            border: 1.5px solid #d8b4fe;
+            display: none;
+        }
+        .result-box h3 {
+            color: #581c87;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        .result-box p {
+            color: #4b5563;
+            font-size: 14.5px;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+        .size-badge {
+            display: inline-block;
+            background: #7e22ce;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 8px 20px;
+            border-radius: 50px;
+            margin: 10px 0;
+        }
+        .btn-action {
+            display: inline-block;
+            background: #581c87;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        .btn-action:hover {
+            background: #3b0764;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Smart Fit</div>
+        <div class="nav-links">
+            <a href="dashboard.html">Home</a>
+            <a href="products.html">Shop</a>
+            <a href="size-recommendation.html" style="color: #7e22ce; font-weight: 600;">Size Guide</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>Smart Virtual Size Recommendation 📏</h1>
+        <p class="subtitle">Enter your height, weight, body shape & fit preference for an auto-estimated perfect fit.</p>
+        
+        <form id="sizeForm">
+            <div class="form-group">
+                <label>Height (cm):</label>
+                <input type="number" id="height" step="0.1" placeholder="e.g. 165" required>
+            </div>
+            <div class="form-group">
+                <label>Weight (kg):</label>
+                <input type="number" id="weight" step="0.1" placeholder="e.g. 58" required>
+            </div>
+            <div class="form-group">
+                <label>Body Shape:</label>
+                <select id="body_shape" required>
+                    <option value="">Select your body shape</option>
+                    <option value="Hourglass">Hourglass (Balanced bust & hips, defined waist)</option>
+                    <option value="Rectangle">Rectangle (Balanced, straight up and down)</option>
+                    <option value="Pear">Pear (Hips broader than bust)</option>
+                    <option value="Athletic">Athletic / Muscular</option>
+                    <option value="Apple">Apple (Broader midsection)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Fit Preference:</label>
+                <select id="fit_preference" required>
+                    <option value="Regular">Regular Fit (Standard comfortable fit)</option>
+                    <option value="Slim">Slim Fit (Body hugging / tight)</option>
+                    <option value="Loose">Loose / Relaxed Fit (Baggy / comfortable room)</option>
+                </select>
+            </div>
+            <button type="button" class="btn-submit" onclick="getSmartRecommendation()">Calculate Smart Size</button>
+        </form>
+
+        <div class="result-box" id="resultBox">
+            <p>Your Perfect Recommended Size is:</p>
+            <div class="size-badge" id="recommendedSizeBadge">M</div>
+            <p id="resultMsg" style="margin-top: 10px;"></p>
+            <div>
+                <a href="products.html" class="btn-action" onclick="saveSelectedSize()">Confirm Size & Go to Shop 🛒</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function getSmartRecommendation() {
+            const heightInput = document.getElementById("height").value;
+            const weightInput = document.getElementById("weight").value;
+            const bodyShapeInput = document.getElementById("body_shape").value;
+            const fitPreferenceInput = document.getElementById("fit_preference").value;
+
+            // අගයන් දීලා තියෙනවාදැයි පරීක්ෂා කිරීම
+            if (!heightInput || !weightInput || !bodyShapeInput || !fitPreferenceInput) {
+                alert("Please fill in all the required fields!");
+                return;
+            }
+
+            const height = parseFloat(heightInput);
+            const weight = parseFloat(weightInput);
+            const body_shape = bodyShapeInput;
+            const fit_preference = fitPreferenceInput;
+
+            try {
+                const response = await fetch("http://localhost:8000/api/recommend-size", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ height, weight, body_shape, fit_preference })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Server responded with an error status.");
+                }
+
+                const result = await response.json();
+
+                if (result.status === "success") {
+                    const resultBox = document.getElementById("resultBox");
+                    document.getElementById("recommendedSizeBadge").textContent = result.recommended_size;
+                    document.getElementById("resultMsg").innerHTML = `${result.message}<br><br><b>Auto-Estimated Measurements:</b> Chest: ~${result.estimated_chest} cm | Waist: ~${result.estimated_waist} cm`;
+                    resultBox.style.display = "block";
+                    
+                    localStorage.setItem("user_recommended_size", result.recommended_size);
+                } else {
+                    alert("Failed to get recommendation from server.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("Failed to connect to backend server. Make sure FastAPI backend is running on http://localhost:8000");
+            }
+        }
+
+        function saveSelectedSize() {
+            const size = document.getElementById("recommendedSizeBadge").textContent;
+            localStorage.setItem("selected_size", size);
+        }
+    </script>
+</body>
+</html>
