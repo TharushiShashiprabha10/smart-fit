@@ -56,15 +56,17 @@
 
             <!-- Action Buttons Section -->
             <section class="action-section">
-                <button class="btn-primary" onclick="startShopping()">Start Shopping &rarr;</button>
+                <!-- මෙන්න මෙතැනට කලින් තිබුණු ඩිසයින් එකටම හරියන බටන් එක කෙලින්ම දාලා තියෙනවා -->
+                <button onclick="goToShop()" style="background-color: #581c87; color: #ffffff; font-size: 16px; font-weight: 600; padding: 10px 45px; border: none; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(88, 28, 135, 0.3); display: inline-block; text-align: center;">Start Shopping ➔</button>
+                
                 <div class="auth-buttons-container">
-    <a href="login.html" style="text-decoration: none;">
-        <button class="btn-secondary">Login</button>
-    </a>
-    <a href="register.html" style="text-decoration: none;">
-        <button class="btn-secondary">Register</button>
-    </a>
-</div>
+                    <a href="login.html" style="text-decoration: none;">
+                        <button class="btn-secondary">Login</button>
+                    </a>
+                    <a href="register.html" style="text-decoration: none;">
+                        <button class="btn-secondary">Register</button>
+                    </a>
+                </div>
             </section>
 
             <div class="bottom-banner">
@@ -86,5 +88,11 @@
         </footer>
     </div>
 
+    <!-- JavaScript to handle Start Shopping button redirect -->
+    <script>
+        function goToShop() {
+            window.location.href = "products.html";
+        }
+    </script>
 </body>
 </html>
