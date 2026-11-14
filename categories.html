@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Clothing Category - SmartFit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f9f5ff;
+            color: #1f2937;
+        }
+        header {
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-size: 15Spx;
+            font-weight: bold;
+            color: #581c87;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .nav-links a:hover {
+            color: #7e22ce;
+        }
+        .container {
+            max-width: 900px;
+            margin: 18px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #581c87;
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+        p.subtitle {
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 40px;
+        }
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+        .category-card {
+            background: #ffffff;
+            border: 2px solid #f3e8ff;
+            border-radius: 16px;
+            padding: 30px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(126, 34, 206, 0.04);
+        }
+        .category-card:hover {
+            border-color: #7e22ce;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(126, 34, 206, 0.12);
+        }
+        .category-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .category-card h3 {
+            color: #581c87;
+            font-size: 19px;
+            margin-bottom: 8px;
+        }
+        .category-card p {
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Smart Fit</div>
+        <div class="nav-links">
+            <a href="dashboard.html">Home</a>
+            <a href="categories.html" style="color: #7e22ce; font-weight: 600;">Categories</a>
+            <a href="products.html">Shop</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>What are you shopping for today? 👗👕</h1>
+        <p class="subtitle">Select a clothing category below to calculate your accurate size recommendation.</p>
+
+        <div class="category-grid">
+            <div class="category-card" onclick="selectCategory('T-Shirts')">
+                <div class="category-icon">👕</div>
+                <h3>T-Shirts & Tops</h3>
+                <p>Casual tees, crop tops & everyday wear</p>
+            </div>
+
+            <div class="category-card" onclick="selectCategory('Frocks / Dresses')">
+                <div class="category-icon">👗</div>
+                <h3>Frocks & Dresses</h3>
+                <p>Party wear, casual frocks & maxi dresses</p>
+            </div>
+
+            <div class="category-card" onclick="selectCategory('Trousers / Pants')">
+                <div class="category-icon">👖</div>
+                <h3>Trousers & Jeans</h3>
+                <p>Denims, formal pants & joggers</p>
+            </div>
+
+            <div class="category-card" onclick="selectCategory('Shirts')">
+                <div class="category-icon">👔</div>
+                <h3>Formal & Casual Shirts</h3>
+                <p>Office wear, button-downs & blouses</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function selectCategory(categoryName) {
+            // තෝරාගත් ඇඳුම් වර්ගය localStorage එකේ සේව් කරගැනීම
+            localStorage.setItem("selected_category", categoryName);
+            
+            // Size Recommendation පිටුවට යොමු කිරීම
+            window.location.href = "size-recommendation.html";
+        }
+    </script>
+
+</body>
+</html>

@@ -21,7 +21,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 40px;
+            padding: 15px 20px;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -33,7 +33,7 @@
         }
         .nav-links {
             display: flex;
-            gap: 25px;
+            gap: 18px;
             align-items: center;
         }
         .nav-links a {
@@ -47,23 +47,42 @@
         }
         .container {
             max-width: 600px;
-            margin: 40px auto;
+            margin: 10px auto;
             padding: 35px;
             background: #ffffff;
             border-radius: 18px;
             box-shadow: 0 4px 20px rgba(126, 34, 206, 0.06);
             border: 1.5px solid #f3e8ff;
         }
+        .category-banner {
+            background: #f3e8ff;
+            color: #581c87;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 1px solid #d8b4fe;
+        }
+        .category-banner a {
+            color: #7e22ce;
+            font-size: 8px;
+            text-decoration: underline;
+            gap: 8px;
+        }
         h1 {
             color: #581c87;
             font-size: 24px;
-            margin-bottom: 8px;
-            text-align: center;
+            margin-bottom: 12px;
+            text-align: left;
         }
         p.subtitle {
             text-align: center;
             color: #6b7280;
-            font-size: 14px;
+            font-size: 12px;
             margin-bottom: 25px;
         }
         .form-group {
@@ -115,11 +134,6 @@
             border: 1.5px solid #d8b4fe;
             display: none;
         }
-        .result-box h3 {
-            color: #581c87;
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
         .result-box p {
             color: #4b5563;
             font-size: 14.5px;
@@ -159,12 +173,18 @@
         <div class="logo">Smart Fit</div>
         <div class="nav-links">
             <a href="dashboard.html">Home</a>
+            <a href="categories.html">Categories</a>
             <a href="products.html">Shop</a>
-            <a href="size-recommendation.html" style="color: #7e22ce; font-weight: 600;">Size Guide</a>
         </div>
     </header>
 
     <div class="container">
+        <!-- තෝරාගත් ඇඳුම් වර්ගය පෙන්වන කොටස -->
+        <div class="category-banner">
+            <span>Selected Category: <strong id="displayCategory">General</strong></span>
+            <a href="categories.html">Change Category</a>
+        </div>
+
         <h1>Smart Virtual Size Recommendation 📏</h1>
         <p class="subtitle">Enter your height, weight, body shape & fit preference for an auto-estimated perfect fit.</p>
         
@@ -200,23 +220,26 @@
         </form>
 
         <div class="result-box" id="resultBox">
-            <p>Your Perfect Recommended Size is:</p>
+            <p>Your Perfect Recommended Size for <strong id="resultCategory"></strong> is:</p>
             <div class="size-badge" id="recommendedSizeBadge">M</div>
             <p id="resultMsg" style="margin-top: 10px;"></p>
             <div>
-                <a href="products.html" class="btn-action" onclick="saveSelectedSize()">Confirm Size & Go to Shop 🛒</a>
+                <a href="products.html" class="btn-action" onclick="saveSelectedSize()">Confirm Size & View Matching Items 🛒</a>
             </div>
         </div>
     </div>
 
     <script>
+        // පිටුව ලෝඩ් වන විට තෝරාගත් Category එක පෙන්වීම
+        const selectedCategory = localStorage.getItem("selected_category") || "T-Shirts";
+        document.getElementById("displayCategory").textContent = selectedCategory;
+
         async function getSmartRecommendation() {
             const heightInput = document.getElementById("height").value;
             const weightInput = document.getElementById("weight").value;
             const bodyShapeInput = document.getElementById("body_shape").value;
             const fitPreferenceInput = document.getElementById("fit_preference").value;
 
-            // අගයන් දීලා තියෙනවාදැයි පරීක්ෂා කිරීම
             if (!heightInput || !weightInput || !bodyShapeInput || !fitPreferenceInput) {
                 alert("Please fill in all the required fields!");
                 return;
@@ -233,7 +256,13 @@
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ height, weight, body_shape, fit_preference })
+                    body: JSON.stringify({ 
+                        height, 
+                        weight, 
+                        body_shape, 
+                        fit_preference,
+                        category: selectedCategory 
+                    })
                 });
 
                 if (!response.ok) {
@@ -244,6 +273,7 @@
 
                 if (result.status === "success") {
                     const resultBox = document.getElementById("resultBox");
+                    document.getElementById("resultCategory").textContent = selectedCategory;
                     document.getElementById("recommendedSizeBadge").textContent = result.recommended_size;
                     document.getElementById("resultMsg").innerHTML = `${result.message}<br><br><b>Auto-Estimated Measurements:</b> Chest: ~${result.estimated_chest} cm | Waist: ~${result.estimated_waist} cm`;
                     resultBox.style.display = "block";

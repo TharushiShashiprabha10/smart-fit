@@ -72,3 +72,10 @@ async def recommend_size(data: SmartSizeRequest):
         "recommended_size": final_size,
         "message": f"Based on your {data.body_shape} body shape and {data.fit_preference} fit preference, your estimated measurements (Chest: {round(chest,1)}cm) give a perfect match of size {final_size}!"
     }
+
+    class SmartSizeRequest(BaseModel):
+    height: float
+    weight: float
+    body_shape: str
+    fit_preference: str
+    category: str = "General"
