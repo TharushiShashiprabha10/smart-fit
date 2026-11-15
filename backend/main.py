@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from database import users_collection, products_collection
 
 app = FastAPI()
@@ -74,8 +74,54 @@ async def recommend_size(data: SmartSizeRequest):
     }
 
     class SmartSizeRequest(BaseModel):
-    height: float
-    weight: float
-    body_shape: str
-    fit_preference: str
-    category: str = "General"
+        height: float
+        weight: float
+        body_shape: str
+        fit_preference: str
+        category: str = "General"
+
+        from pydantic import BaseModel, EmailStr
+
+
+# Register එක සඳහා අවශ්‍ය Model එක (username ලෙස වෙනස් කර ඇත)
+class RegisterRequest(BaseModel):
+    username: str
+    email: str
+    password: str
+
+@app.post("/register")
+async def register_user(data: RegisterRequest):
+    # 1. ඩේටාබේස් එකේ මෙම ඊමේල් එක දැනටමත් තියෙනවද බලන්න
+    existing_user = await users_collection.find_one({"email": data.email})
+    if existing_user:
+        return {"error": "Email already registered!"}
+    
+    # 2. අලුත් යූසර්ගේ විස්තර ඩේටාබේස් එකට සේව් කිරීම
+    user_dict = {
+        "username": data.username,
+        "email": data.email,
+        "password": data.password  # (අවශ්‍ය නම් මෙහිදී hashing පාවිච්චි කළ හැක)
+    }
+    
+    await users_collection.insert_one(user_dict)
+    return {"message": "User registered successfully!"}
+
+
+# Login එක සඳහා අවශ්‍ය Model එක
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+@app.post("/login")
+async def login_user(data: LoginRequest):
+    # 1. ඩේටාබේස් එකෙන් ඊමේල් එක හරහා යූසර්ව සොයයි
+    user = await users_collection.find_one({"email": data.email})
+    
+    if not user:
+        return {"error": "Email not found!"}
+    
+    # 2. පාස්වර්ඩ් එක සමාදැයි පරීක්ෂා කරයි
+    if user["password"] != data.password:
+        return {"error": "Incorrect password!"}
+    
+    return {"message": "Login Successful!"}

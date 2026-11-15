@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Smart Fit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(107, 33, 168, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo-text {
+            color: #581c87;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 16px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #7e22ce;
+        }
+        .content-container {
+            max-width: 600px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(107, 33, 168, 0.1);
+        }
+        .content-container h2 {
+            color: #581c87;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .contact-info {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #4b5563;
+            line-height: 1.8;
+            text-align: center;
+        }
+        .contact-info p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo-text">Smart Fit</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html" class="active">Contact</a>
+        </nav>
+    </header>
+
+    <div class="content-container">
+        <h2>Contact Us</h2>
+        <p>Have questions or need assistance? Reach out to our support team anytime!</p>
+        <div class="contact-info">
+            <p>📧 <strong>Email:</strong> support@smartfit.com</p>
+            <p>📞 <strong>Phone:</strong> +94 11 234 5678</p>
+            <p>📍 <strong>Location:</strong> Colombo, Sri Lanka</p>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Smart Fit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            min-height: 100vh;
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(107, 33, 168, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo-text {
+            color: #581c87;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #4b5563;
+            font-size: 16px;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover, .nav-links a.active {
+            color: #7e22ce;
+        }
+        .content-container {
+            max-width: 800px;
+            margin: 60px auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(107, 33, 168, 0.1);
+        }
+        .content-container h2 {
+            color: #581c87;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .content-container p {
+            color: #4b5563;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo-text">Smart Fit</div>
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html" class="active">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+
+    <div class="content-container">
+        <h2>About Smart Fit</h2>
+        <p>Welcome to <strong>Smart Fit</strong> - your ultimate virtual size recommendation platform. We aim to bridge the gap between online fashion shopping and perfect fit accuracy.</p>
+        <p>Our intelligent system helps you find the right clothing sizes easily based on your precise body measurements and style preferences, ensuring a seamless and confident shopping experience.</p>
+    </div>
+
+</body>
+</html>
