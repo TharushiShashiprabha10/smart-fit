@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, EmailStr
-from database import users_collection, products_collection
+from pydantic import BaseModel
+from datetime import datetime
+from database import users_collection, products_collection, measurements_collection
 
 app = FastAPI()
 
@@ -22,14 +23,15 @@ async def get_products():
         products.append(product)
     return {"status": "success", "data": products}
 
-# 2. Smart Size Recommendation සඳහා අවශ්‍ය Request Model එක
+# 2. Smart Size Recommendation Request Model
 class SmartSizeRequest(BaseModel):
     height: float
     weight: float
     body_shape: str
     fit_preference: str
+    category: str = "General"
 
-# 3. Size Recommendation API එක (මෙන්න මේක තියෙන්නම ඕන!)
+# 3. Size Recommendation API (MongoDB එකටත් ඩේටා Save වේ)
 @app.post("/api/recommend-size")
 async def recommend_size(data: SmartSizeRequest):
     base_chest = data.weight * 1.3 + (data.height * 0.1)
@@ -65,6 +67,20 @@ async def recommend_size(data: SmartSizeRequest):
         if current_index < len(sizes_order) - 1:
             final_size = sizes_order[current_index + 1]
 
+    # Customer ඇතුළත් කළ විස්තර MongoDB එකට Save කිරීම
+    record = {
+        "category": data.category,
+        "height": data.height,
+        "weight": data.weight,
+        "body_shape": data.body_shape,
+        "fit_preference": data.fit_preference,
+        "estimated_chest": round(chest, 1),
+        "estimated_waist": round(waist, 1),
+        "recommended_size": final_size,
+        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    }
+    await measurements_collection.insert_one(record)
+
     return {
         "status": "success",
         "estimated_chest": round(chest, 1),
@@ -73,17 +89,16 @@ async def recommend_size(data: SmartSizeRequest):
         "message": f"Based on your {data.body_shape} body shape and {data.fit_preference} fit preference, your estimated measurements (Chest: {round(chest,1)}cm) give a perfect match of size {final_size}!"
     }
 
-    class SmartSizeRequest(BaseModel):
-        height: float
-        weight: float
-        body_shape: str
-        fit_preference: str
-        category: str = "General"
+# 4. Save වුණු Customer Details බලාගැනීමේ API එක
+@app.get("/api/measurements")
+async def get_measurements():
+    records = []
+    async for item in measurements_collection.find():
+        item["_id"] = str(item["_id"])
+        records.append(item)
+    return {"status": "success", "data": records}
 
-        from pydantic import BaseModel, EmailStr
-
-
-# Register එක සඳහා අවශ්‍ය Model එක (username ලෙස වෙනස් කර ඇත)
+# 5. Register API
 class RegisterRequest(BaseModel):
     username: str
     email: str
@@ -91,36 +106,31 @@ class RegisterRequest(BaseModel):
 
 @app.post("/register")
 async def register_user(data: RegisterRequest):
-    # 1. ඩේටාබේස් එකේ මෙම ඊමේල් එක දැනටමත් තියෙනවද බලන්න
     existing_user = await users_collection.find_one({"email": data.email})
     if existing_user:
         return {"error": "Email already registered!"}
     
-    # 2. අලුත් යූසර්ගේ විස්තර ඩේටාබේස් එකට සේව් කිරීම
     user_dict = {
         "username": data.username,
         "email": data.email,
-        "password": data.password  # (අවශ්‍ය නම් මෙහිදී hashing පාවිච්චි කළ හැක)
+        "password": data.password
     }
     
     await users_collection.insert_one(user_dict)
     return {"message": "User registered successfully!"}
 
-
-# Login එක සඳහා අවශ්‍ය Model එක
+# 6. Login API
 class LoginRequest(BaseModel):
     email: str
     password: str
 
 @app.post("/login")
 async def login_user(data: LoginRequest):
-    # 1. ඩේටාබේස් එකෙන් ඊමේල් එක හරහා යූසර්ව සොයයි
     user = await users_collection.find_one({"email": data.email})
     
     if not user:
         return {"error": "Email not found!"}
     
-    # 2. පාස්වර්ඩ් එක සමාදැයි පරීක්ෂා කරයි
     if user["password"] != data.password:
         return {"error": "Incorrect password!"}
     

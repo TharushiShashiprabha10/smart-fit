@@ -8,6 +8,7 @@ client = AsyncIOMotorClient(MONGO_DETAILS)
 # Database එකේ නම (SmartFit DB)
 database = client.smartfit_db
 
-# Collection දෙක නිවැරදිව නිර්මාණය කර Export කිරීම
+# Collections නිවැරදිව නිර්මාණය කර Export කිරීම
 users_collection = database.get_collection("users")
 products_collection = database.get_collection("products")
+measurements_collection = database.get_collection("measurements")

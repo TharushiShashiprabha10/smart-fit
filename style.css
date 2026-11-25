@@ -248,3 +248,7 @@ body {
     color: #6c657a;
     font-size: 10px;
 }
+
+html {
+    scroll-behavior: smooth;
+}

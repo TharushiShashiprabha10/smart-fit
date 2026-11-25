@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login to Your Account - SmartFit</title>
+    <title>Login - SmartFit</title>
     <style>
         * {
             margin: 0;
@@ -46,18 +46,18 @@
             font-size: 22px;
         }
         .input-group {
-            margin-bottom: 18px;
+            margin-bottom: 15px;
         }
         .input-group label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             color: #374151;
             font-size: 13px;
             font-weight: 600;
         }
         .input-group input {
             width: 100%;
-            padding: 12px 14px;
+            padding: 11px 14px;
             border: 1.5px solid #d8b4fe;
             border-radius: 8px;
             font-size: 14px;
@@ -69,7 +69,7 @@
         }
         .btn-login {
             width: 100%;
-            padding: 13px;
+            padding: 12px;
             background-color: #7e22ce;
             color: white;
             border: none;
@@ -83,32 +83,18 @@
         .btn-login:hover {
             background-color: #6b21a8;
         }
-        .extra-links {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 15px;
-            font-size: 13px;
-        }
-        .extra-links a {
-            color: #7e22ce;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .extra-links a:hover {
-            text-decoration: underline;
-        }
-        .register-prompt {
+        .register-link {
             text-align: center;
-            margin-top: 25px;
+            margin-top: 18px;
             font-size: 13px;
             color: #4b5563;
         }
-        .register-prompt a {
+        .register-link a {
             color: #7e22ce;
             text-decoration: none;
             font-weight: 600;
         }
-        .register-prompt a:hover {
+        .register-link a:hover {
             text-decoration: underline;
         }
         /* Toast Notification Styling */
@@ -143,8 +129,8 @@
             <h1>Smart Fit</h1>
             <p>Your Size. Our Priority.</p>
         </div>
-        <h2>Login to Your Account</h2>
-
+        <h2>Welcome Back</h2>
+        
         <form id="loginForm">
             <div class="input-group">
                 <label for="email">Email</label>
@@ -157,11 +143,7 @@
             <button type="submit" class="btn-login">Login</button>
         </form>
 
-       <div class="extra-links">
-    <a href="forgot-password.html">Forgot Password?</a>
-</div>
-
-        <div class="register-prompt">
+        <div class="register-link">
             Don't have an account? <a href="register.html">Register</a>
         </div>
     </div>
@@ -193,61 +175,18 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    showToast("✨ Login Successful! Welcome back, " + data.username);
-                    // සාර්ථක වූ පසු Dashboard එකට හෝ Home පිටුවට යාමට (දැනට index.html වෙත)
+                    showToast("✨ Login Successful! Redirecting...");
                     setTimeout(() => {
-                        window.location.href = "index.html"; 
+                        window.location.href = "dashboard.html"; // හෝ ඔබට යන්න අවශ්‍ය පේජ් එකට (උදා: index.html)
                     }, 1500);
                 } else {
-                    showToast("❌ Error: " + (data.detail || "Invalid email or password"), true);
+                    showToast("❌ Error: " + (data.error || data.detail || "Login failed"), true);
                 }
             } catch (error) {
                 console.error("Error:", error);
                 showToast("⚠️ Network error occurred!", true);
             }
         });
-
-        // Forgot Password Modal Functions
-        function openForgotPasswordModal(e) {
-            e.preventDefault();
-            document.getElementById('forgotModal').style.display = 'flex';
-        }
-
-        function closeForgotPasswordModal() {
-            document.getElementById('forgotModal').style.display = 'none';
-            document.getElementById('resetEmail').value = '';
-            document.getElementById('resetPassword').value = '';
-        }
-
-        async function submitResetPassword() {
-            const email = document.getElementById('resetEmail').value.trim();
-            const new_password = document.getElementById('resetPassword').value;
-
-            if (!email || !new_password) {
-                showToast("❌ Please fill in all fields", true);
-                return;
-            }
-
-            try {
-                const response = await fetch('http://127.0.0.1:8000/forgot-password', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, new_password })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    showToast("✨ Password updated successfully!");
-                    closeForgotPasswordModal();
-                } else {
-                    showToast("❌ " + (data.detail || "Failed to update password"), true);
-                }
-            } catch (error) {
-                showToast("⚠️ Network error occurred!", true);
-            }
-        }
-
     </script>
 </body>
 </html>
