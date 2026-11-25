@@ -14,7 +14,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 1. Products ලබාගැනීමේ API එක
+
 @app.get("/api/products")
 async def get_products():
     products = []
@@ -23,7 +23,7 @@ async def get_products():
         products.append(product)
     return {"status": "success", "data": products}
 
-# 2. Smart Size Recommendation Request Model
+
 class SmartSizeRequest(BaseModel):
     height: float
     weight: float
@@ -31,7 +31,7 @@ class SmartSizeRequest(BaseModel):
     fit_preference: str
     category: str = "General"
 
-# 3. Size Recommendation API (MongoDB එකටත් ඩේටා Save වේ)
+
 @app.post("/api/recommend-size")
 async def recommend_size(data: SmartSizeRequest):
     base_chest = data.weight * 1.3 + (data.height * 0.1)
@@ -61,13 +61,12 @@ async def recommend_size(data: SmartSizeRequest):
 
     final_size = base_size
     sizes_order = ["S", "M", "L", "XL"]
-    
+
     if data.fit_preference.lower() == "loose":
         current_index = sizes_order.index(base_size)
         if current_index < len(sizes_order) - 1:
             final_size = sizes_order[current_index + 1]
 
-    # Customer ඇතුළත් කළ විස්තර MongoDB එකට Save කිරීම
     record = {
         "category": data.category,
         "height": data.height,
@@ -89,7 +88,7 @@ async def recommend_size(data: SmartSizeRequest):
         "message": f"Based on your {data.body_shape} body shape and {data.fit_preference} fit preference, your estimated measurements (Chest: {round(chest,1)}cm) give a perfect match of size {final_size}!"
     }
 
-# 4. Save වුණු Customer Details බලාගැනීමේ API එක
+
 @app.get("/api/measurements")
 async def get_measurements():
     records = []
@@ -98,40 +97,60 @@ async def get_measurements():
         records.append(item)
     return {"status": "success", "data": records}
 
-# 5. Register API
+
 class RegisterRequest(BaseModel):
     username: str
     email: str
     password: str
 
+
 @app.post("/register")
 async def register_user(data: RegisterRequest):
-    existing_user = await users_collection.find_one({"email": data.email})
+    existing_user = await users_collection.find_one({"email": data.email.strip()})
     if existing_user:
         return {"error": "Email already registered!"}
-    
+
     user_dict = {
-        "username": data.username,
-        "email": data.email,
-        "password": data.password
+        "username": data.username.strip(),
+        "email": data.email.strip(),
+        "password": data.password.strip()
     }
-    
+
     await users_collection.insert_one(user_dict)
     return {"message": "User registered successfully!"}
 
-# 6. Login API
+
 class LoginRequest(BaseModel):
     email: str
     password: str
 
+
 @app.post("/login")
 async def login_user(data: LoginRequest):
-    user = await users_collection.find_one({"email": data.email})
-    
+    user = await users_collection.find_one({"email": data.email.strip()})
+
     if not user:
         return {"error": "Email not found!"}
-    
-    if user["password"] != data.password:
+
+    if user["password"].strip() != data.password.strip():
         return {"error": "Incorrect password!"}
-    
+
     return {"message": "Login Successful!"}
+
+
+class ResetPasswordRequest(BaseModel):
+    email: str
+    new_password: str
+
+
+@app.post("/reset-password")
+async def reset_password(data: ResetPasswordRequest):
+    user = await users_collection.find_one({"email": data.email.strip()})
+    if not user:
+        return {"error": "Email not found!"}
+
+    await users_collection.update_one(
+        {"email": data.email.strip()},
+        {"$set": {"password": data.new_password.strip()}}
+    )
+    return {"message": "Password updated successfully!"}

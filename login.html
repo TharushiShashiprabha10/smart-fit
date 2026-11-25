@@ -67,7 +67,26 @@
         .input-group input:focus {
             border-color: #7e22ce;
         }
-        .btn-login {
+        .forgot-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: -6px;
+            margin-bottom: 12px;
+        }
+        .btn-forgot {
+            background: none;
+            border: none;
+            color: #7e22ce;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+        }
+        .btn-forgot:hover {
+            text-decoration: underline;
+            color: #6b21a8;
+        }
+        .btn-login, .btn-reset {
             width: 100%;
             padding: 12px;
             background-color: #7e22ce;
@@ -78,9 +97,9 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-top: 10px;
+            margin-top: 8px;
         }
-        .btn-login:hover {
+        .btn-login:hover, .btn-reset:hover {
             background-color: #6b21a8;
         }
         .register-link {
@@ -97,6 +116,53 @@
         .register-link a:hover {
             text-decoration: underline;
         }
+        /* Forgot Password Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(17, 24, 39, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: #ffffff;
+            width: 100%;
+            max-width: 400px;
+            padding: 28px 25px;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(88, 28, 135, 0.2);
+            position: relative;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .modal-header h3 {
+            color: #581c87;
+            font-size: 19px;
+        }
+        .btn-close {
+            background: #f3e8ff;
+            color: #581c87;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-close:hover {
+            background: #e9d5ff;
+        }
         /* Toast Notification Styling */
         #toast {
             visibility: hidden;
@@ -107,7 +173,7 @@
             border-radius: 8px;
             padding: 14px;
             position: fixed;
-            z-index: 1;
+            z-index: 20;
             left: 50%;
             bottom: 30px;
             transform: translateX(-50%);
@@ -140,11 +206,35 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" placeholder="Enter your password" required>
             </div>
+            <div class="forgot-row">
+                <button type="button" id="openResetModal" class="btn-forgot">Forgot Password?</button>
+            </div>
             <button type="submit" class="btn-login">Login</button>
         </form>
 
         <div class="register-link">
             Don't have an account? <a href="register.html">Register</a>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="resetModal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Reset Password</h3>
+                <button type="button" id="closeResetModal" class="btn-close" aria-label="Close">&times;</button>
+            </div>
+            <form id="resetPasswordForm">
+                <div class="input-group">
+                    <label for="resetEmail">Registered Email</label>
+                    <input type="email" id="resetEmail" placeholder="Enter your registered email" required>
+                </div>
+                <div class="input-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" placeholder="Enter new password" required>
+                </div>
+                <button type="submit" class="btn-reset">Update Password</button>
+            </form>
         </div>
     </div>
 
@@ -159,6 +249,7 @@
             setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
         }
 
+        // Login form submission
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -174,13 +265,72 @@
 
                 const data = await response.json();
 
-                if (response.ok) {
+                if (response.ok && data.message) {
                     showToast("✨ Login Successful! Redirecting...");
                     setTimeout(() => {
-                        window.location.href = "dashboard.html"; // හෝ ඔබට යන්න අවශ්‍ය පේජ් එකට (උදා: index.html)
+                        window.location.href = "dashboard.html";
                     }, 1500);
                 } else {
-                    showToast("❌ Error: " + (data.error || data.detail || "Login failed"), true);
+                    showToast("❌ " + (data.error || data.detail || "Invalid email or password!"), true);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                showToast("⚠️ Network error occurred!", true);
+            }
+        });
+
+        // Forgot Password Modal controls
+        const resetModal = document.getElementById('resetModal');
+        const openResetBtn = document.getElementById('openResetModal');
+        const closeResetBtn = document.getElementById('closeResetModal');
+        const resetForm = document.getElementById('resetPasswordForm');
+
+        openResetBtn.addEventListener('click', function() {
+            const currentLoginEmail = document.getElementById('email').value.trim();
+            if (currentLoginEmail) {
+                document.getElementById('resetEmail').value = currentLoginEmail;
+            }
+            resetModal.classList.add('active');
+            resetModal.setAttribute('aria-hidden', 'false');
+        });
+
+        function hideResetModal() {
+            resetModal.classList.remove('active');
+            resetModal.setAttribute('aria-hidden', 'true');
+            resetForm.reset();
+        }
+
+        closeResetBtn.addEventListener('click', hideResetModal);
+
+        resetModal.addEventListener('click', function(e) {
+            if (e.target === resetModal) {
+                hideResetModal();
+            }
+        });
+
+        // Reset password form submission
+        resetForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('resetEmail').value.trim();
+            const new_password = document.getElementById('newPassword').value;
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/reset-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, new_password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.message) {
+                    showToast("✅ " + data.message);
+                    hideResetModal();
+                    document.getElementById('email').value = email;
+                    document.getElementById('password').value = "";
+                } else {
+                    showToast("❌ " + (data.error || data.detail || "Could not reset password!"), true);
                 }
             } catch (error) {
                 console.error("Error:", error);
