@@ -355,7 +355,7 @@
     <header>
         <div class="header-container">
             <div class="logo">Smart Fit</div>
-            
+
             <div class="header-right">
                 <nav class="nav-links" id="navLinks">
                     <a href="dashboard.html">Home</a>
@@ -426,16 +426,39 @@
             navLinks.classList.toggle("active");
         }
 
-        // Default sample products
+        // Sample products (6 items per category, available in all sizes XS-XL)
         const sampleProducts = [
-            { id: 1, name: "Lavender Casual Cotton Tee", category: "T-Shirts", size: "M", price: 2450, icon: "👕" },
-            { id: 2, name: "Classic White Oversized Tee", category: "T-Shirts", size: "L", price: 2600, icon: "👕" },
-            { id: 3, name: "Violet Floral Summer Frock", category: "Frocks / Dresses", size: "M", price: 4850, icon: "👗" },
-            { id: 4, name: "Elegant Evening Midi Dress", category: "Frocks / Dresses", size: "S", price: 5900, icon: "👗" },
-            { id: 5, name: "Slim Fit High-Waist Denim", category: "Trousers / Pants", size: "M", price: 4500, icon: "👖" },
-            { id: 6, name: "Relaxed Linen Office Trousers", category: "Trousers / Pants", size: "L", price: 4200, icon: "👖" },
-            { id: 7, name: "Crisp Formal Button-Down Shirt", category: "Shirts", size: "M", price: 3650, icon: "👔" },
-            { id: 8, name: "Pastel Lilac Casual Shirt", category: "Shirts", size: "S", price: 3400, icon: "👔" }
+            // T-Shirts (6 items)
+            { id: 1, name: "Lavender Casual Cotton Tee", category: "T-Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 2450, icon: "👕" },
+            { id: 2, name: "Classic White Oversized Tee", category: "T-Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 2600, icon: "👕" },
+            { id: 3, name: "Soft Lilac Cropped Tee", category: "T-Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 2200, icon: "👕" },
+            { id: 4, name: "Plum Ribbed Fitted Tee", category: "T-Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 2150, icon: "👕" },
+            { id: 5, name: "Charcoal Relaxed Crew Tee", category: "T-Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 2750, icon: "👕" },
+            { id: 6, name: "Pastel Graphic Street Tee", category: "T-Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 2850, icon: "👕" },
+
+            // Frocks / Dresses (6 items)
+            { id: 7, name: "Violet Floral Summer Frock", category: "Frocks / Dresses", sizes: ["XS", "S", "M", "L", "XL"], price: 4850, icon: "👗" },
+            { id: 8, name: "Elegant Evening Midi Dress", category: "Frocks / Dresses", sizes: ["XS", "S", "M", "L", "XL"], price: 5900, icon: "👗" },
+            { id: 9, name: "Pastel Mauve Pleated Dress", category: "Frocks / Dresses", sizes: ["XS", "S", "M", "L", "XL"], price: 5200, icon: "👗" },
+            { id: 10, name: "Petite Orchid Wrap Frock", category: "Frocks / Dresses", sizes: ["XS", "S", "M", "L", "XL"], price: 4600, icon: "👗" },
+            { id: 11, name: "Royal Amethyst A-Line Dress", category: "Frocks / Dresses", sizes: ["XS", "S", "M", "L", "XL"], price: 5500, icon: "👗" },
+            { id: 12, name: "Breezy Linen Tiered Sundress", category: "Frocks / Dresses", sizes: ["XS", "S", "M", "L", "XL"], price: 4950, icon: "👗" },
+
+            // Trousers / Pants (6 items)
+            { id: 13, name: "Slim Fit High-Waist Denim", category: "Trousers / Pants", sizes: ["XS", "S", "M", "L", "XL"], price: 4500, icon: "👖" },
+            { id: 14, name: "Relaxed Linen Office Trousers", category: "Trousers / Pants", sizes: ["XS", "S", "M", "L", "XL"], price: 4200, icon: "👖" },
+            { id: 15, name: "Tailored Ankle Chino Pants", category: "Trousers / Pants", sizes: ["XS", "S", "M", "L", "XL"], price: 4100, icon: "👖" },
+            { id: 16, name: "High-Rise Skinny Jeans", category: "Trousers / Pants", sizes: ["XS", "S", "M", "L", "XL"], price: 4350, icon: "👖" },
+            { id: 17, name: "Wide-Leg Comfort Trousers", category: "Trousers / Pants", sizes: ["XS", "S", "M", "L", "XL"], price: 4650, icon: "👖" },
+            { id: 18, name: "Casual Jogger Cargo Pants", category: "Trousers / Pants", sizes: ["XS", "S", "M", "L", "XL"], price: 3900, icon: "👖" },
+
+            // Shirts (6 items)
+            { id: 19, name: "Crisp Formal Button-Down Shirt", category: "Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 3650, icon: "👔" },
+            { id: 20, name: "Pastel Lilac Casual Shirt", category: "Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 3400, icon: "👔" },
+            { id: 21, name: "Classic Oxford Poplin Shirt", category: "Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 3800, icon: "👔" },
+            { id: 22, name: "Fitted Studio Collar Shirt", category: "Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 3300, icon: "👔" },
+            { id: 23, name: "Easy-Care Executive Shirt", category: "Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 3950, icon: "👔" },
+            { id: 24, name: "Relaxed Resort Linen Shirt", category: "Shirts", sizes: ["XS", "S", "M", "L", "XL"], price: 3550, icon: "👔" }
         ];
 
         let allProducts = [];
@@ -480,7 +503,7 @@
 
             const filtered = allProducts.filter(item => {
                 const matchCat = (selectedCat === "All" || item.category === selectedCat);
-                const matchSz = (selectedSz === "All" || item.size === selectedSz);
+                const matchSz = (selectedSz === "All" || (item.sizes && item.sizes.includes(selectedSz)) || item.size === selectedSz);
                 return matchCat && matchSz;
             });
 
@@ -503,7 +526,8 @@
             }
 
             products.forEach(product => {
-                const isPerfectMatch = recommendedSize !== "All" && product.size === recommendedSize;
+                const displaySize = recommendedSize !== "All" ? recommendedSize : "M";
+                const isPerfectMatch = recommendedSize !== "All";
                 const matchBadge = isPerfectMatch ? `<span class="match-tag">✓ 98% Size Match</span>` : "";
 
                 const card = `
@@ -520,9 +544,9 @@
                             <div>
                                 <div class="product-meta">
                                     <span class="product-price">LKR ${product.price.toLocaleString()}</span>
-                                    <span class="product-size">Size: ${product.size}</span>
+                                    <span class="product-size">Size: ${displaySize}</span>
                                 </div>
-                                <button class="btn-add" onclick="addToCart(${product.id})">Add to Cart 🛒</button>
+                                <button class="btn-add" onclick="addToCart(${product.id}, '${displaySize}')">Add to Cart 🛒</button>
                             </div>
                         </div>
                     </div>
@@ -537,11 +561,11 @@
             applyFilters();
         }
 
-        function addToCart(productId) {
+        function addToCart(productId, selectedSize) {
             const product = allProducts.find(p => p.id === productId);
             if (!product) return;
 
-            cart.push(product);
+            cart.push({ ...product, size: selectedSize });
             localStorage.setItem("smartfit_cart", JSON.stringify(cart));
             updateCartUI();
             toggleCart(true);
